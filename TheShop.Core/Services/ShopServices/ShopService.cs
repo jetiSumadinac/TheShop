@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheShop.Shared.Models;
 
 namespace TheShop.Core.Services.ShopServices
 {
@@ -34,8 +35,8 @@ namespace TheShop.Core.Services.ShopServices
         {
             #region ordering article
 
-            Article article = null;
-            Article tempArticle = null;
+            ArticleModel article = null;
+            ArticleModel tempArticle = null;
             var articleExists = Supplier1.ArticleInInventory(id);
             if (articleExists)
             {
@@ -95,7 +96,7 @@ namespace TheShop.Core.Services.ShopServices
             #endregion
         }
 
-        public async Task<Article> GetById(int id)
+        public async Task<ArticleModel> GetById(int id)
         {
             return await DatabaseDriver.GetById(id);
         }
@@ -104,14 +105,14 @@ namespace TheShop.Core.Services.ShopServices
     //in memory implementation
     public class DatabaseDriver
     {
-        private List<Article> _articles = new List<Article>();
+        private List<ArticleModel> _articles = new List<ArticleModel>();
 
-        public async Task<Article> GetById(int id)
+        public async Task<ArticleModel> GetById(int id)
         {
             return _articles.Single(x => x.ID == id);
         }
 
-        public async Task Save(Article article)
+        public async Task Save(ArticleModel article)
         {
             _articles.Add(article);
         }
@@ -142,9 +143,9 @@ namespace TheShop.Core.Services.ShopServices
             return true;
         }
 
-        public Article GetArticle(int id)
+        public ArticleModel GetArticle(int id)
         {
-            return new Article()
+            return new ArticleModel()
             {
                 ID = 1,
                 Name_of_article = "Article from supplier1",
@@ -160,9 +161,9 @@ namespace TheShop.Core.Services.ShopServices
             return true;
         }
 
-        public Article GetArticle(int id)
+        public ArticleModel GetArticle(int id)
         {
-            return new Article()
+            return new ArticleModel()
             {
                 ID = 1,
                 Name_of_article = "Article from supplier2",
@@ -178,28 +179,15 @@ namespace TheShop.Core.Services.ShopServices
             return true;
         }
 
-        public Article GetArticle(int id)
+        public ArticleModel GetArticle(int id)
         {
-            return new Article()
+            return new ArticleModel()
             {
                 ID = 1,
                 Name_of_article = "Article from supplier3",
                 ArticlePrice = 460
             };
         }
-    }
-
-    public class Article
-    {
-        public int ID { get; set; }
-
-        public string Name_of_article { get; set; }
-
-        public int ArticlePrice { get; set; }
-        public bool IsSold { get; set; }
-
-        public DateTime SoldDate { get; set; }
-        public int BuyerUserId { get; set; }
     }
 }
 
