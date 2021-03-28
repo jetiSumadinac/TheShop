@@ -16,7 +16,6 @@ namespace TheShop.Core.Services.ShopServices
 
 
         private readonly IShopRepository _repo;
-        //private DatabaseDriver DatabaseDriver;
         private Logger logger;
 
         private Supplier1 Supplier1;
@@ -26,7 +25,6 @@ namespace TheShop.Core.Services.ShopServices
         public ShopService(IShopRepository repo)
         {
             _repo = repo;
-            //DatabaseDriver = new DatabaseDriver();
             logger = new Logger();
             Supplier1 = new Supplier1();
             Supplier2 = new Supplier2();

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 using TheShop.Core.Services.ShopServices;
+using TheShop.DataAccess.Infrastructure.Shop;
 
 namespace TheShop
 {
@@ -22,7 +23,8 @@ namespace TheShop
 			var host = Host.CreateDefaultBuilder()
 				.ConfigureServices((context, services) =>
 				{
-					services.AddSingleton<IShopService, TheShop.Core.Services.ShopServices.ShopService>(); //TODO:
+					services.AddSingleton<IShopService, ShopService>(); //TODO:
+					services.AddSingleton<IShopRepository, ShopRepository>();
 				})
 				.Build();//TODO: we could use serilog here
 			var shopService = ActivatorUtilities.GetServiceOrCreateInstance<IShopService>(host.Services);

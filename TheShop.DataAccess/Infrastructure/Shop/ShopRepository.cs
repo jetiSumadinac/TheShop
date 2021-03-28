@@ -12,7 +12,7 @@ namespace TheShop.DataAccess.Infrastructure.Shop
 {
     public class ShopRepository : BaseRepository<ArticleModel>, IShopRepository
     {
-        private List<ArticleModel> _articles = DbContext.Articles;
+        private DbContext context = DbContext.Instance;
 
         public async Task<ArticleModel> GetSingleAsync(Expression<Func<ArticleModel, bool>> query)
         {
@@ -21,14 +21,14 @@ namespace TheShop.DataAccess.Infrastructure.Shop
 
         public async Task<int> SaveAsync(ArticleModel data)
         {
-            _articles.Add(data);
+            context.Articles.Add(data);
 
             return 1; //TODO: we should return generated ID of artice
         }
 
         protected override IQueryable<ArticleModel> GetEntities()
         {
-            return _articles.AsQueryable(); //in real life this would return joined database tables
+            return context.Articles.AsQueryable(); //in real life this would return joined database tables
         }
     }
 }
