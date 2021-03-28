@@ -8,6 +8,7 @@ namespace TheShop.Core.Services.ShopServices
 {
     public interface IShopService
     {
-        public Task Test();
+        Task OrderAndSellArticle(int id, int maxExpectedPrice, int buyerId);
+        Task<Article> GetById(int id);
     }
 }

@@ -14,16 +14,18 @@ namespace TheShop
 			//TODO: these config methods should be in seperate class, something like Startup.cs in ASP.NetCore
 			var builder = new ConfigurationBuilder();
 			BuildConfig(builder);
+
+			AppStart();
+		}
+
+		static async void AppStart() {
 			var host = Host.CreateDefaultBuilder()
 				.ConfigureServices((context, services) =>
 				{
 					services.AddSingleton<IShopService, TheShop.Core.Services.ShopServices.ShopService>(); //TODO:
 				})
 				.Build();//TODO: we could use serilog here
-
-			var svc = ActivatorUtilities.GetServiceOrCreateInstance<IShopService>(host.Services);
-
-			var shopService = new ShopService();
+			var shopService = ActivatorUtilities.GetServiceOrCreateInstance<IShopService>(host.Services);
 
 			try
 			{
@@ -38,7 +40,7 @@ namespace TheShop
 			try
 			{
 				//print article on console
-				var article = shopService.GetById(1);
+				var article = await shopService.GetById(1);
 				Console.WriteLine("Found article with ID: " + article.ID);
 			}
 			catch (Exception ex)
@@ -49,7 +51,7 @@ namespace TheShop
 			try
 			{
 				//print article on console				
-				var article = shopService.GetById(12);
+				var article = await shopService.GetById(12);
 				Console.WriteLine("Found article with ID: " + article.ID);
 			}
 			catch (Exception ex)
