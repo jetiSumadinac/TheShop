@@ -8,6 +8,6 @@ namespace TheShop.Core.Services.ShopServices
 {
     public interface IShopService
     {
-
+        public Task Test();
     }
 }

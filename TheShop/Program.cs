@@ -17,7 +17,7 @@ namespace TheShop
 			var host = Host.CreateDefaultBuilder()
 				.ConfigureServices((context, services) =>
 				{
-					services.AddSingleton<IShopService, TheShop.Core.Services.ShopServices.ShopService>(); //TODO
+					services.AddSingleton<IShopService, TheShop.Core.Services.ShopServices.ShopService>(); //TODO:
 				})
 				.Build();//TODO: we could use serilog here
 
