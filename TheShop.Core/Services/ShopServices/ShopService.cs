@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using TheShop.DataAccess.Infrastructure.Shop;
 using TheShop.Shared.Models;
 
 namespace TheShop.Core.Services.ShopServices
@@ -14,16 +14,19 @@ namespace TheShop.Core.Services.ShopServices
             throw new NotImplementedException();
         }
 
-        private DatabaseDriver DatabaseDriver;
+
+        private readonly IShopRepository _repo;
+        //private DatabaseDriver DatabaseDriver;
         private Logger logger;
 
         private Supplier1 Supplier1;
         private Supplier2 Supplier2;
         private Supplier3 Supplier3;
 
-        public ShopService()
+        public ShopService(IShopRepository repo)
         {
-            DatabaseDriver = new DatabaseDriver();
+            _repo = repo;
+            //DatabaseDriver = new DatabaseDriver();
             logger = new Logger();
             Supplier1 = new Supplier1();
             Supplier2 = new Supplier2();
@@ -81,7 +84,8 @@ namespace TheShop.Core.Services.ShopServices
 
             try
             {
-                DatabaseDriver.Save(article);
+                //DatabaseDriver.Save(article);
+                await _repo.SaveAsync(article);
                 logger.Info("Article with id=" + id + " is sold.");
             }
             catch (ArgumentNullException ex)
@@ -98,25 +102,25 @@ namespace TheShop.Core.Services.ShopServices
 
         public async Task<ArticleModel> GetById(int id)
         {
-            return await DatabaseDriver.GetById(id);
+            return await _repo.GetSingleAsync(a => a.ID == id);
         }
     }
 
     //in memory implementation
-    public class DatabaseDriver
-    {
-        private List<ArticleModel> _articles = new List<ArticleModel>();
+    //public class DatabaseDriver
+    //{
+    //    private List<ArticleModel> _articles = new List<ArticleModel>();
 
-        public async Task<ArticleModel> GetById(int id)
-        {
-            return _articles.Single(x => x.ID == id);
-        }
+    //    public async Task<ArticleModel> GetById(int id)
+    //    {
+    //        return _articles.Single(x => x.ID == id);
+    //    }
 
-        public async Task Save(ArticleModel article)
-        {
-            _articles.Add(article);
-        }
-    }
+    //    public async Task Save(ArticleModel article)
+    //    {
+    //        _articles.Add(article);
+    //    }
+    //}
 
     public class Logger
     {

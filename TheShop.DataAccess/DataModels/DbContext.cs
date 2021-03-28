@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using TheShop.Shared.Models;
 
 namespace TheShop.DataAccess.DataModels
 {
-    public class DbContext
+    public static class DbContext
     {
+        public static List<ArticleModel> Articles;
     }
 }
