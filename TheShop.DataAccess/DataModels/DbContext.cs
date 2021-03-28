@@ -7,12 +7,6 @@ namespace TheShop.DataAccess.DataModels
     {
         private static DbContext instance = null;
         private static readonly object padlock = new object();
-
-
-        public DbContext()
-        {
-            Articles = new List<ArticleModel>();
-        }
         public static DbContext Instance {
             get {
                 lock (padlock)
@@ -24,6 +18,11 @@ namespace TheShop.DataAccess.DataModels
                     return instance;
                 }
             }
+        }
+
+        public DbContext()
+        {
+            Articles = new List<ArticleModel>();
         }
 
         public List<ArticleModel> Articles;

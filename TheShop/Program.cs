@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
+using TheShop.Core.Services.LogService;
 using TheShop.Core.Services.ShopServices;
 using TheShop.DataAccess.Infrastructure.Shop;
 
@@ -12,7 +13,6 @@ namespace TheShop
 	{
 		private static void Main(string[] args)
 		{
-			//TODO: these config methods should be in seperate class, something like Startup.cs in ASP.NetCore
 			var builder = new ConfigurationBuilder();
 			BuildConfig(builder);
 
@@ -20,10 +20,16 @@ namespace TheShop
 		}
 
 		static async void AppStart() {
+
+			//TODO: these config methods should be in seperate class, something like Startup.cs in ASP.NetCore
 			var host = Host.CreateDefaultBuilder()
 				.ConfigureServices((context, services) =>
 				{
-					services.AddSingleton<IShopService, ShopService>(); //TODO:
+					//core
+					services.AddSingleton<IShopService, ShopService>();
+					services.AddSingleton<ILogService, LogService>();
+					
+					//repo
 					services.AddSingleton<IShopRepository, ShopRepository>();
 				})
 				.Build();//TODO: we could use serilog here

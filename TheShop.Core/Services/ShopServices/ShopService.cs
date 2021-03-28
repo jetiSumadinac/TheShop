@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TheShop.Core.Services.LogService;
 using TheShop.DataAccess.Infrastructure.Shop;
 using TheShop.Shared.Models;
 
@@ -16,16 +17,16 @@ namespace TheShop.Core.Services.ShopServices
 
 
         private readonly IShopRepository _repo;
-        private Logger logger;
+        private readonly ILogService _log;
 
         private Supplier1 Supplier1;
         private Supplier2 Supplier2;
         private Supplier3 Supplier3;
 
-        public ShopService(IShopRepository repo)
+        public ShopService(IShopRepository repo, ILogService log)
         {
             _repo = repo;
-            logger = new Logger();
+            _log = log;
             Supplier1 = new Supplier1();
             Supplier2 = new Supplier2();
             Supplier3 = new Supplier3();
@@ -74,7 +75,7 @@ namespace TheShop.Core.Services.ShopServices
                 throw new Exception("Could not order article");
             }
 
-            logger.Debug("Trying to sell article with id=" + id);
+            await _log.LogDebugAsync("Trying to sell article with id=" + id);
 
             article.IsSold = true;
             article.SoldDate = DateTime.Now;
@@ -82,13 +83,12 @@ namespace TheShop.Core.Services.ShopServices
 
             try
             {
-                //DatabaseDriver.Save(article);
                 await _repo.SaveAsync(article);
-                logger.Info("Article with id=" + id + " is sold.");
+                await _log.LogInfoAsync("Article with id=" + id + " is sold.");
             }
             catch (ArgumentNullException ex)
             {
-                logger.Error("Could not save article with id=" + id);
+                await _log.LogErrorAsync("Could not save article with id=" + id);
                 throw new Exception("Could not save article with id");
             }
             catch (Exception)
@@ -101,40 +101,6 @@ namespace TheShop.Core.Services.ShopServices
         public async Task<ArticleModel> GetById(int id)
         {
             return await _repo.GetSingleAsync(a => a.ID == id);
-        }
-    }
-
-    //in memory implementation
-    //public class DatabaseDriver
-    //{
-    //    private List<ArticleModel> _articles = new List<ArticleModel>();
-
-    //    public async Task<ArticleModel> GetById(int id)
-    //    {
-    //        return _articles.Single(x => x.ID == id);
-    //    }
-
-    //    public async Task Save(ArticleModel article)
-    //    {
-    //        _articles.Add(article);
-    //    }
-    //}
-
-    public class Logger
-    {
-        public void Info(string message)
-        {
-            Console.WriteLine("Info: " + message);
-        }
-
-        public void Error(string message)
-        {
-            Console.WriteLine("Error: " + message);
-        }
-
-        public void Debug(string message)
-        {
-            Console.WriteLine("Debug: " + message);
         }
     }
 
