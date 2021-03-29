@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TheShop.Core.Services.LogService;
+using TheShop.Core.Services.SupplierService;
 using TheShop.DataAccess.Infrastructure.Shop;
 using TheShop.Shared.Models;
 
@@ -15,21 +16,15 @@ namespace TheShop.Core.Services.ShopServices
             throw new NotImplementedException();
         }
 
-
         private readonly IShopRepository _repo;
+        private readonly ISupplierService _supplierService;
         private readonly ILogService _log;
 
-        private Supplier1 Supplier1;
-        private Supplier2 Supplier2;
-        private Supplier3 Supplier3;
-
-        public ShopService(IShopRepository repo, ILogService log)
+        public ShopService(IShopRepository repo, ISupplierService supplierService, ILogService log)
         {
             _repo = repo;
+            _supplierService = supplierService;
             _log = log;
-            Supplier1 = new Supplier1();
-            Supplier2 = new Supplier2();
-            Supplier3 = new Supplier3();
         }
 
         //TODO: this method should break into two seperate methods
@@ -38,34 +33,8 @@ namespace TheShop.Core.Services.ShopServices
             #region ordering article
 
             ArticleModel article = null;
-            ArticleModel tempArticle = null;
-            var articleExists = Supplier1.ArticleInInventory(id);
-            if (articleExists)
-            {
-                tempArticle = Supplier1.GetArticle(id);
-                if (maxExpectedPrice < tempArticle.ArticlePrice)
-                {
-                    articleExists = Supplier2.ArticleInInventory(id);
-                    if (articleExists)
-                    {
-                        tempArticle = Supplier2.GetArticle(id);
-                        if (maxExpectedPrice < tempArticle.ArticlePrice)
-                        {
-                            articleExists = Supplier3.ArticleInInventory(id);
-                            if (articleExists)
-                            {
-                                tempArticle = Supplier3.GetArticle(id);
-                                if (maxExpectedPrice < tempArticle.ArticlePrice)
-                                {
-                                    article = tempArticle;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            article = await _supplierService.FindArticle(id, maxExpectedPrice);
 
-            article = tempArticle;
             #endregion
 
             #region selling article
@@ -101,60 +70,6 @@ namespace TheShop.Core.Services.ShopServices
         public async Task<ArticleModel> GetById(int id)
         {
             return await _repo.GetSingleAsync(a => a.ID == id);
-        }
-    }
-
-    public class Supplier1
-    {
-        public bool ArticleInInventory(int id)
-        {
-            return true;
-        }
-
-        public ArticleModel GetArticle(int id)
-        {
-            return new ArticleModel()
-            {
-                ID = 1,
-                Name_of_article = "Article from supplier1",
-                ArticlePrice = 458
-            };
-        }
-    }
-
-    public class Supplier2
-    {
-        public bool ArticleInInventory(int id)
-        {
-            return true;
-        }
-
-        public ArticleModel GetArticle(int id)
-        {
-            return new ArticleModel()
-            {
-                ID = 1,
-                Name_of_article = "Article from supplier2",
-                ArticlePrice = 459
-            };
-        }
-    }
-
-    public class Supplier3
-    {
-        public bool ArticleInInventory(int id)
-        {
-            return true;
-        }
-
-        public ArticleModel GetArticle(int id)
-        {
-            return new ArticleModel()
-            {
-                ID = 1,
-                Name_of_article = "Article from supplier3",
-                ArticlePrice = 460
-            };
         }
     }
 }
