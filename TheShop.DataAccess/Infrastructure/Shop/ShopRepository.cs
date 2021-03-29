@@ -21,7 +21,7 @@ namespace TheShop.DataAccess.Infrastructure.Shop
             data.ID = generateId();//this should simulate ID generator
             context.Articles.Add(data);
 
-            return data.ID; //TODO: we should return generated ID of artice
+            return data.ID; 
         }
 
         protected override IQueryable<ArticleModel> GetEntities()
