@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using TheShop.Core.Services.LogService;
 using TheShop.Core.Services.ShopServices;
+using TheShop.Core.Services.SupplierService;
 using TheShop.DataAccess.Infrastructure.Shop;
 
 namespace TheShop
@@ -28,6 +29,7 @@ namespace TheShop
 					//core
 					services.AddSingleton<IShopService, ShopService>();
 					services.AddSingleton<ILogService, LogService>();
+					services.AddSingleton<ISupplierService, SupplierService>();
 					
 					//repo
 					services.AddSingleton<IShopRepository, ShopRepository>();
