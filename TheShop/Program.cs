@@ -40,7 +40,7 @@ namespace TheShop
 			try
 			{
 				//order and sell
-				shopService.OrderAndSellArticle(1, 20, 10);
+				await shopService.OrderAndSellArticle(1, 20, 10);
 			}
 			catch (Exception ex)
 			{

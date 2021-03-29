@@ -28,10 +28,12 @@ namespace TheShop.Core.Services.SupplierService
         public async Task<ArticleModel> FindArticle(int id, int maxExpectedPrice)
         {
             ArticleModel result = null;
+            ArticleModel tempArticle = null;
             foreach (var s in suppliers) {
                 var articleExists = s.ArticleInInventory(id);
                 if (articleExists) {
-                    if(maxExpectedPrice > result.ArticlePrice)
+                    tempArticle = s.GetArticle(id);
+                    if(maxExpectedPrice > tempArticle.ArticlePrice)
                         result = s.GetArticle(id);
                 }
             }
