@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using TheShop.Core.Services.LogService;
 using TheShop.Core.Services.SupplierService;
@@ -27,8 +25,8 @@ namespace TheShop.Core.Services.ShopServices
             _log = log;
         }
 
-        //TODO: this method should break into two seperate methods
-        public async Task OrderAndSellArticle(int id, int maxExpectedPrice, int buyerId)
+        //TODO: this method should break into two seperate methods for ordering and selling respectevly
+        public async Task OrderArticle(int id, int maxExpectedPrice)
         {
             #region ordering article
 
@@ -44,27 +42,32 @@ namespace TheShop.Core.Services.ShopServices
                 throw new Exception("Could not order article");
             }
 
-            await _log.LogDebugAsync("Trying to sell article with id=" + id);
+        
+            #endregion
+        }
 
+        public async Task SellArticle(int buyerId, ArticleModel article) {
+            await _log.LogDebugAsync("Trying to sell article");//Id is not generated yet
+            int? articleID = null;
             article.IsSold = true;
             article.SoldDate = DateTime.Now;
             article.BuyerUserId = buyerId;
 
             try
             {
-                await _repo.SaveAsync(article);
-                await _log.LogInfoAsync("Article with id=" + id + " is sold.");
+                articleID = await _repo.SaveAsync(article);
+                await _log.LogInfoAsync("Article with id=" + articleID + " is sold.");
             }
             catch (ArgumentNullException ex)
             {
-                await _log.LogErrorAsync("Could not save article with id=" + id);
+                await _log.LogErrorAsync("Could not save article with id=" + articleID);
                 throw new Exception("Could not save article with id");
             }
             catch (Exception)
             {
             }
 
-            #endregion
+
         }
 
         public async Task<ArticleModel> GetById(int id)

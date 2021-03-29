@@ -7,11 +7,13 @@ using TheShop.Core.Services.LogService;
 using TheShop.Core.Services.ShopServices;
 using TheShop.Core.Services.SupplierService;
 using TheShop.DataAccess.Infrastructure.Shop;
+using TheShop.Shared.Models;
 
 namespace TheShop
 {
 	internal class Program
 	{
+		
 		private static void Main(string[] args)
 		{
 			var builder = new ConfigurationBuilder();
@@ -19,7 +21,9 @@ namespace TheShop
 
 			AppStart();
 		}
-
+		static void Startup() { 
+		
+		}
 		static async void AppStart() {
 
 			//TODO: these config methods should be in seperate class, something like Startup.cs in ASP.NetCore
@@ -40,7 +44,13 @@ namespace TheShop
 			try
 			{
 				//order and sell
-				await shopService.OrderAndSellArticle(1, 20, 10);
+				await shopService.OrderArticle(1, 20);
+				await shopService.SellArticle(10,
+					new ArticleModel
+					{
+						Name_of_article = "my new article",
+						ArticlePrice = 12,
+					});
 			}
 			catch (Exception ex)
 			{
