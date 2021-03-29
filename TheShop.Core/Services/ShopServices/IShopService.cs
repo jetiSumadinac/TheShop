@@ -5,7 +5,8 @@ namespace TheShop.Core.Services.ShopServices
 {
     public interface IShopService
     {
-        Task OrderAndSellArticle(int id, int maxExpectedPrice, int buyerId);
+        Task OrderArticle(int id, int maxExpectedPrice);
+        Task SellArticle(int buyerId, ArticleModel article);
         Task<ArticleModel> GetById(int id);
     }
 }

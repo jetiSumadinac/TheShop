@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using TheShop.DataAccess.DataModels;
-using TheShop.DataAccess.Interfaces;
 using TheShop.Shared.Models;
 
 namespace TheShop.DataAccess.Infrastructure.Shop
@@ -21,14 +18,25 @@ namespace TheShop.DataAccess.Infrastructure.Shop
 
         public async Task<int> SaveAsync(ArticleModel data)
         {
+            data.ID = generateId();//this should simulate ID generator
             context.Articles.Add(data);
 
-            return 1; //TODO: we should return generated ID of artice
+            return data.ID; //TODO: we should return generated ID of artice
         }
 
         protected override IQueryable<ArticleModel> GetEntities()
         {
             return context.Articles.AsQueryable(); //in real life this would return joined database tables
         }
+
+        #region private methods 
+        private int generateId() {
+            if (!GetEntities().Any())
+                return 1;
+            var lastId = GetEntities().LastOrDefault().ID;
+
+            return lastId++;
+        }
+        #endregion
     }
 }
