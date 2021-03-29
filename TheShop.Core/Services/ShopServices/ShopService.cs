@@ -25,7 +25,6 @@ namespace TheShop.Core.Services.ShopServices
             _log = log;
         }
 
-        //TODO: this method should break into two seperate methods for ordering and selling respectevly
         public async Task OrderArticle(int id, int maxExpectedPrice)
         {
             #region ordering article
