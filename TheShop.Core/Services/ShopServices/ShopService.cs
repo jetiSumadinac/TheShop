@@ -27,22 +27,11 @@ namespace TheShop.Core.Services.ShopServices
 
         public async Task OrderArticle(int id, int maxExpectedPrice)
         {
-            #region ordering article
-
             ArticleModel article = null;
             article = await _supplierService.FindArticle(id, maxExpectedPrice);
 
-            #endregion
-
-            #region selling article
-
             if (article == null)
-            {
                 throw new Exception("Could not order article");
-            }
-
-        
-            #endregion
         }
 
         public async Task SellArticle(int buyerId, ArticleModel article) {
