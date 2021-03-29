@@ -92,7 +92,7 @@ namespace TheShop.Core.Services.SupplierService
                 {
                     ID = 1,
                     Name_of_article = "Article from supplier3",
-                    ArticlePrice = 460
+                    ArticlePrice = 15
                 };
             }
         }
