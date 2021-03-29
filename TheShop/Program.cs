@@ -21,9 +21,6 @@ namespace TheShop
 
 			AppStart();
 		}
-		static void Startup() { 
-		
-		}
 		static async void AppStart() {
 
 			//TODO: these config methods should be in seperate class, something like Startup.cs in ASP.NetCore
