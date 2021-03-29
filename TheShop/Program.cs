@@ -3,7 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
+using TheShop.Core.Services.LogService;
 using TheShop.Core.Services.ShopServices;
+using TheShop.Core.Services.SupplierService;
+using TheShop.DataAccess.Infrastructure.Shop;
 
 namespace TheShop
 {
@@ -11,24 +14,33 @@ namespace TheShop
 	{
 		private static void Main(string[] args)
 		{
-			//TODO: these config methods should be in seperate class, something like Startup.cs in ASP.NetCore
 			var builder = new ConfigurationBuilder();
 			BuildConfig(builder);
+
+			AppStart();
+		}
+
+		static async void AppStart() {
+
+			//TODO: these config methods should be in seperate class, something like Startup.cs in ASP.NetCore
 			var host = Host.CreateDefaultBuilder()
 				.ConfigureServices((context, services) =>
 				{
-					services.AddSingleton<IShopService, TheShop.Core.Services.ShopServices.ShopService>(); //TODO:
+					//core
+					services.AddSingleton<IShopService, ShopService>();
+					services.AddSingleton<ILogService, LogService>();
+					services.AddSingleton<ISupplierService, SupplierService>();
+					
+					//repo
+					services.AddSingleton<IShopRepository, ShopRepository>();
 				})
 				.Build();//TODO: we could use serilog here
-
-			var svc = ActivatorUtilities.GetServiceOrCreateInstance<IShopService>(host.Services);
-
-			var shopService = new ShopService();
+			var shopService = ActivatorUtilities.GetServiceOrCreateInstance<IShopService>(host.Services);
 
 			try
 			{
 				//order and sell
-				shopService.OrderAndSellArticle(1, 20, 10);
+				await shopService.OrderAndSellArticle(1, 20, 10);
 			}
 			catch (Exception ex)
 			{
@@ -38,7 +50,7 @@ namespace TheShop
 			try
 			{
 				//print article on console
-				var article = shopService.GetById(1);
+				var article = await shopService.GetById(1);
 				Console.WriteLine("Found article with ID: " + article.ID);
 			}
 			catch (Exception ex)
@@ -49,7 +61,7 @@ namespace TheShop
 			try
 			{
 				//print article on console				
-				var article = shopService.GetById(12);
+				var article = await shopService.GetById(12);
 				Console.WriteLine("Found article with ID: " + article.ID);
 			}
 			catch (Exception ex)
